@@ -12,7 +12,7 @@ A high-level wrapper for Chipmunk2D.
 Richard van Roy
 
 == Requirements
-* [[https://github.com/pluizer/chicken-chipmunk][chipmunk]]
+* [[https://github.com/pluizer/chicken-chipmunk|chipmunk]]
 
 === Vectors
 
