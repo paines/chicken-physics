@@ -2,7 +2,7 @@ A high-level wrapper for Chipmunk2D.
 
 - Version: 0.1
 - Author: Richard van Roy
-- Project: [[https://github.com/pluizer/chicken-chipmunk]]
+- Project: [[https://github.com/pluizer/chicken-physics]]
 - License: [[http://opensource.org/licenses/MIT][MIT]]
 
 * About
