@@ -1,0 +1,20 @@
+A high-level wrapper for Chipmunk2D.
+
+- Version: 0.1
+- Author: Richard van Roy
+- Project: [[https://github.com/pluizer/chicken-chipmunk]]
+- License: [[http://opensource.org/licenses/MIT][MIT]]
+
+* About
+This is a 2D physics library using Chipmunk2D.
+
+* Installation
+Simply clone this repository and run =chicken-install= inside the project's root directory.
+
+* Documentation
+See: [[https://wiki.call-cc.org/eggref/4/physics]]
+
+* Todo
+- Unit tests
+- Finish documentation for queries
+- Add examples

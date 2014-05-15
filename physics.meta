@@ -1,0 +1,3 @@
+((author "Richard van Roy")
+ (synopsis "A 2D physics library")
+ (files "physics.setup" "physics.scm"))

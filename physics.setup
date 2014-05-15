@@ -1,0 +1,4 @@
+(run (make))
+(install-extension 'physics '(
+	"physics.so" "physics.import.so"
+))

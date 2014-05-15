@@ -1,0 +1,888 @@
+[[tags: egg]]
+
+== Physics
+
+[[toc:]]
+
+== Documentation
+
+A high-level wrapper for Chipmunk2D.
+
+== Author
+Richard van Roy
+
+== Requirements
+* [[https://github.com/pluizer/chicken-chipmunk][chipmunk]]
+
+=== Vectors
+
+==== Creation
+
+<procedure>(create-vect x y)</procedure>
+
+Creates a new vector.
+
+==== Properties
+
+<procedure>(vect-x vect)</procedure>
+
+<procedure>(vect-y vect)</procedure>
+
+==== Methods
+
+<procedure>(vect-=? vect-a vect-b)</procedure>
+
+Check if two vectors are equal.
+
+<procedure>(vect-add vect-a vect-b)</procedure>
+
+Adds two vectors.
+
+<procedure>(vect-sub vect-a vect-b)</procedure>
+
+Substracts two vectors
+
+<procedure>(vect-neg vect)</procedure>
+
+Negate a vector.
+
+<procedure>(vect-mult vect scalar)</procedure>
+
+Scalar multiplication
+
+<procedure>(vect-dot vect-a vect-b)</procedure>
+
+Vector dot product.
+
+<procedure>(vect-cross vect-a vect-b)</procedure>
+
+2D vector cross product analog. The cross product of 2D vectors results in a 3D vector with only a z component. This function returns the value along the z-axis.
+
+<procedure>(vect-perp vect)</procedure>
+
+Returns a perpendicular vector. (90 degree rotation)
+
+<procedure>(vect-rperp vect)</procedure>
+
+Returns a perpendicular vector. (-90 degree rotation)
+
+<procedure>(vect-project vect-a vect-b)</procedure>
+
+Returns the vector projection of ''vect-a'' onto ''vect-b''.
+
+<procedure>(vect-rotate vect-a vect-b)</procedure>
+
+Uses complex multiplication to rotate ''vect-a'' by ''vect-b''. Scaling will occur if ''vect-a'' is not a unit vector.
+
+<procedure>(vect-unrotate vect-a vect-b)</procedure>
+
+Inverse of ''(vect-rotate)''.
+
+<procedure>(vect-length vect)</procedure>
+
+Returns the length of v.
+
+<procedure>(vect-length-squared vect)</procedure>
+
+Returns the squared length of v. Faster than ''(vect-length)'' when you only need to compare lengths.
+
+<procedure>(vect-lerp vect-a vect-b t)</procedure>
+
+Linearly interpolate between ''vect-a'' and ''vect-b''.
+
+<procedure>(vect-lerpconst vect-a vect-b t)</procedure>
+
+Linearly interpolate between ''vect-a'' towards ''vect-b'' by distance d.
+
+<procedure>(vect-slerp vect-a vect-b t)</procedure>
+
+Spherical linearly interpolate between ''vect-a'' and ''vect-b''.
+
+<procedure>(vect-slerpconst vect-a vect-b angle)</procedure>
+
+Spherical linearly interpolate between ''vect-a'' towards ''vect-b'' by no more than angle ''angle'' in radians.
+
+<procedure>(vect-normalize vect)</procedure>
+
+Returns a normalized copy of v. As a special case, it returns ''(vect-zero)'' when called on ''(vect-zero)''.
+
+<procedure>(vect-clamp vect length)</procedure>
+
+Clamp v to length ''length''.
+
+<procedure>(vect-dist vect-a vect-b)</procedure>
+
+Returns the distance between ''vect-a'' and ''vect-b''.
+
+<procedure>(vect-dist-squared vect-a vect-b)</procedure>
+
+Returns the squared distance between ''vect-a'' and ''vect-b''. Faster than ''(cpvdist)'' when you only need to compare distances.
+
+<procedure>(vect-near? vect-a vect-b distance)</procedure>
+
+Returns true if the distance between ''vect-a'' and ''vect-b'' is less than ''distance''.
+
+==== Conversions
+
+<procedure>(angle->vect angle)</procedure>
+
+Returns the unit length vector for the given ''angle'' (in radians).
+
+<procedure>(vect->angle vect)</procedure>
+
+Returns the angular direction ''vect'' is pointing in (in radians).
+
+=== Axis Aligned Bounding Boxes
+
+==== Creation
+
+<procedure>(create-bb left-bottom right-top)</procedure>
+
+Creates a new Axis Aligned Bounding Box
+
+==== Properties
+
+<procedure>(bb-left-bottom bb)</procedure>
+
+<procedure>(bb-right-top bb)</procedure>
+
+==== Methods
+
+<procedure>(bb-intersects? bb-a bb-b)</procedure>
+
+Returns true if the bounding boxes intersect.
+
+<procedure>(bb-contains-bb? bb other)</procedure>
+
+Returns true if ''bb'' completely contains ''other''.
+
+<procedure>(bb-contains-vect? bb vect)</procedure>
+
+Returns true if bb contains ''vect''.
+
+<procedure>(bb-merge bb-a bb-b)</procedure>
+
+Return the minimal bounding box that contains both ''bb-a'' and ''bb-b''.
+
+<procedure>(bb-expand bb vect)</procedure>
+
+Return the minimal bounding box that contains both bb and ''vect''.
+
+<procedure>(bb-center bb)</procedure>
+
+Return the center of bb.
+
+<procedure>(bb-area bb)</procedure>
+
+Return the area of bb.
+
+<procedure>(bb-merged-area bb-a bb-b)</procedure>
+
+Merges ''bb-a'' and ''bb-b'' then returns the area of the merged bounding box.
+
+<procedure>(bb-seqment-query bb vect-a vect-b)</procedure>
+
+Returns the fraction along the segment query the bounding box is hit. Returns '''infinity''' if it doesn’t hit.
+
+<procedure>(bb-intersects-seqment bb vect-a vect-b)</procedure>
+
+Returns true if the segment defined by endpoints ''vect-a'' and ''vect-b'' intersect ''bb''.
+
+<procedure>(bb-clamp-vect bb vect)</procedure>
+
+Returns a copy of ''vect'' clamped to the bounding box.
+
+<procedure>(bb-wrap-vect bb vect)</procedure>
+
+Returns a copy of ''vect'' wrapped to the bounding box.
+
+=== Bodies
+
+==== Creation
+
+<procedure>(create-body mass inertia)</procedure>
+
+Returns a new body. ''mass'' and ''inertia'' are the mass and moment of inertia for the body. Guessing the mass for a body is usually fine, but guessing a moment of inertia can lead to a very poor simulation.
+
+<procedure>(create-static-body)</procedure>
+
+Create additional static bodies with infinite mass and moment of inertia.
+
+==== Properties
+
+<procedure>(body-mass body)</procedure>
+<setter>(set! (body-mass body) value)</setter>
+Mass of the body.
+
+<procedure>(body-moment body)</procedure>
+<setter>(set! (body-moment body) value)</setter>
+Moment of inertia (MoI or sometimes just moment) of the body. The moment is like the rotational mass of a body. See below for function to help calculate the moment.
+
+<procedure>(body-position body)</procedure>
+<setter>(set! (body-position body) value)</setter>
+Position of the center of gravity of the body. When changing the position you may also want to call ''(space-reindex-shapes-for-body)'' to update the collision detection information for the attached shapes if plan to make any queries against the space.
+
+<procedure>(body-velocity body)</procedure>
+<setter>(set! (body-velocity body) value)</setter>
+Linear velocity of the center of gravity of the body.
+
+<procedure>(body-force body)</procedure>
+<setter>(set! (body-force body) value)</setter>
+Force applied to the center of gravity of the body.
+
+<procedure>(body-angle body)</procedure>
+<setter>(set! (body-angle body) value)</setter>
+Rotation of the body in radians. When changing the rotation you may also want to call ''(space-reindex-shapes-for-body)'' to update the collision detection information for the attached shapes if plan to make any queries against the space.
+
+<procedure>(body-angle-velocity body)</procedure>
+<setter>(set! (body-angle-velocity body) value)</setter>
+The angular velocity of the body in radians per second.
+
+<procedure>(body-torque body)</procedure>
+<setter>(set! (body-torque body) value)</setter>
+The torque applied to the body.
+
+<procedure>(body-rotation body)</procedure>
+The rotation vector for the body. Can be used with ''(vect-rotate)'' or ''(vect-unrotate)'' to perform fast rotations.
+
+<procedure>(body-velocity-limit body)</procedure>
+<setter>(set! (body-velocity-limit body) value)</setter>
+Velocity limit of the body. Defaults to '''infinity''' unless you set it specifically. Can be used to limit falling speeds, etc.
+
+<procedure>(body-angularvelocity-limit body)</procedure>
+<setter>(set! (body-angular-velocity-limit body) value)</setter>
+Angular velocity limit of the body in radians per second. Defaults to '''infinity''' unless you set it specifically.
+
+<procedure>(body-space body)</procedure>
+Get the ''space'' that ''body'' has been added to.
+
+<procedure>(body-userdata body)</procedure>
+<setter>(set! (body-userdata body) value)</setter>
+Userdata can be set to any object and is not used internally.
+
+==== Sleeping Functions
+
+<procedure>(body-sleeping? body)</procedure>
+Returns '''#t''' if ''body'' is sleeping.
+
+<procedure>(body-activate body)</procedure>
+Reset the idle timer on a body. If it was sleeping, wake it and any other bodies it was touching.
+
+<procedure>(body-sleep body)</procedure>
+Forces a body to fall asleep immediately even if it’s in midair. Cannot be called from a callback.
+
+<procedure>(body-activate-static body [filter-shape])</procedure>
+Similar in function to ''(body-activate)''. Activates all bodies touching ''body''. If ''filter-shape'' is set, then only bodies touching through it will be awoken.
+
+<procedure>(body-sleep-with-group body [group])</procedure>
+When objects in Chipmunk sleep, they sleep as a group of all objects that are touching or jointed together. When an object is woken up, all of the objects in it’s group are woken up. this function allows you group sleeping objects together. It acts identically to ''(body-sleep)'' if you don't pass a ''group'' by starting a new group. If you pass a sleeping body for ''group'', ''body'' will be awoken when ''group'' is awoken. You can use this to initialize levels and start stacks of objects in a pre-sleeping state.
+
+==== Iterators
+
+<procedure>(body-each-shape body proc)</procedure>
+This functions calls ''proc'' on every shape inside this body.
+
+
+''proc'' should have the following form:
+<enscript highlight="scheme">
+(lambda (shape) ...)
+</enscript>
+
+<procedure>(body-each-constraint body proc)</procedure>
+This functions calls ''proc'' on every constraint inside this body.
+
+
+''proc'' should have the following form:
+<enscript highlight="scheme">
+(lambda (constraint) ...)
+</enscript>
+
+<procedure>(body-each-arbiter body proc)</procedure>
+This functions calls ''proc'' on every arbiter inside this body.
+
+
+''proc'' should have the following form:
+<enscript highlight="scheme">
+(lambda (arbiter) ...)
+</enscript>
+
+==== Moment of Inertia and Area Helper Functions
+
+Use the following functions to approximate the moment of inertia for your body, adding the results together if you want to use more than one.
+
+<procedure>(moment-for-circle mass radius-a radius-b offset)</procedure>
+Calculate the moment of inertia for a hollow circle, ''radius-a'' and ''radius-b'' are the inner and outer diameters in no particular order. (A solid circle has an inner diameter of 0)
+
+<procedure>(moment-for-seqment mass vect-a vect-b)</procedure>
+Calculate the moment of inertia for a line segment. The endpoints ''vect-a'' and ''vect-b'' are relative to the body.
+
+<procedure>(moment-for-polygon vertices offset)</procedure>
+Calculate the moment of inertia for a solid polygon shape assuming it’s center of gravity is at it’s centroid. The offset is added to each vertex.
+
+<procedure>(moment-for-box width height)</procedure>
+Calculate the moment of inertia for a solid box centered on the body.
+
+<procedure>(area-for-circle radius-a radius-b)</procedure>
+Area of a hollow circle.
+
+<procedure>(area-for-segment vect-a vect-b radius)</procedure>
+Area of a beveled segment. (Will always be zero if ''radius'' is zero)
+
+<procedure>(area-for-polygon vertices)</procedure>
+Signed area of a polygon shape. Returns a negative number for polygons with a backwards winding.
+
+==== Coordinate Conversion Functions
+
+Many things are defined in coordinates local to a body meaning that the (0,0) is at the center of gravity of the body and the axis rotate along with the body.
+
+<procedure>(body-local->world body vect)</procedure>
+Convert from body local coordinates to world space coordinates.
+
+<procedure>(body-world->local body vect)</procedure>
+Convert from world space coordinates to body local coordinates.
+
+==== Applying Forces and Torques
+
+People are sometimes confused by the difference between a force and an impulse. An impulse is basically a very large force applied over a very short period of time, like a ball hitting a wall or cannon firing. Chipmunk treats impulses as if they occur instantaneously by simply adding directly to the velocity of an object. Both impulses and forces are affected the mass of an object. Double the mass of the object and halve the effect.
+
+<procedure>(body-reset-forces body)</procedure>
+Zero both the forces and torques currently applied to the body.
+
+<procedure>(body-apply-force body f r)</procedure>
+Add the force ''f'' to ''body'' at a relative offset ''r'' from the center of gravity.
+
+<procedure>(body-apply-impulse body i j)</procedure>
+Add the impulse ''j'' to ''body'' at a relative offset ''r'' from the center of gravity.
+
+'''Note:''' Both the ''(body-apply-force)'' and ''(body-apply-impulse)'' functions take a force or impulse in absolute coordinates and applies it at a relative offset in absolute coordinates. (The offset is relative to the center of gravity, but is not rotated with the body)
+
+==== Misc functions
+
+<procedure>(body-static? body)</procedure>
+Returns '''#t''' if body is a static body. Either ''(space-static-body)'' or a body created with ''(create-static-body)''.
+
+<procedure>(body-roque? body)</procedure>
+Returns '''#t''' if body has never been added to a space.
+
+=== Collision Shapes
+
+==== Properties
+
+<procedure>(shape-body shape)</procedure>
+<setter>(set! (shape-body shape) value)</setter>
+The rigid body the shape is attached to. Can only be set when the shape is not added to a space.
+
+<procedure>(shape-bb shape)</procedure>
+<setter>(set! (shape-bb shape) value)</setter>
+The bounding box of the shape. Only guaranteed to be valid after ''(shape-cache-bb)'' or ''(space-step)'' is called. Moving a body that a shape is connected to does not update it’s bounding box. For shapes used for queries that aren’t attached to bodies, you can also use ''(shape-update)''.
+
+<procedure>(shape-sensor shape)</procedure>
+<setter>(set! (shape-sensor shape) value)</setter>
+A boolean value if this shape is a sensor or not. Sensors only call collision callbacks, and never generate real collisions.
+
+<procedure>(shape-elasticity shape)</procedure>
+<setter>(set! (shape-elasticity shape) value)</setter>
+Elasticity of the shape. A value of ''0.0'' gives no bounce, while a value of ''1.0'' will give a “perfect” bounce. However due to inaccuracies in the simulation using ''1.0'' or greater is not recommended however. The elasticity for a collision is found by multiplying the elasticity of the individual shapes together.
+
+<procedure>(shape-friction shape)</procedure>
+<setter>(set! (shape-friction shape) value)</setter>
+Friction coefficient. Chipmunk uses the Coulomb friction model, a value of ''0.0'' is frictionless. The friction for a collision is found by multiplying the friction of the individual shapes together.
+
+<procedure>(shape-surface-velocity shape)</procedure>
+<setter>(set! (shape-surface-velocity shape) value)</setter>
+The surface velocity of the object. Useful for creating conveyor belts or players that move around. This value is only used when calculating friction, not resolving the collision.
+
+<procedure>(shape-collision-type shape)</procedure>
+<setter>(set! (shape-collision-type shape) value)</setter>
+You can assign types to Chipmunk collision shapes that trigger callbacks when objects of certain types touch.
+
+<procedure>(shape-group shape)</procedure>
+<setter>(set! (shape-group shape) value)</setter>
+<procedure>High-level interface</procedure>
+'''TODO'''
+
+<procedure>(shape-layers shape)</procedure>
+<setter>(set! (shape-layers shape) value)</setter>
+<procedure>High-level interface</procedure>
+'''TODO'''
+
+<procedure>(shape-space shape)</procedure>
+Get the ''space'' that ''shape'' has been added to.
+
+<procedure>(shape-userdata shape)</procedure>
+<setter>(set! (shape-userdata shape) value)</setter>
+This can be set to any value.
+
+==== Misc Functions
+
+<procedure>(shape-cache-bb shape)</procedure>
+Synchronizes shape with the body its attached to.
+
+<procedure>(shape-update shape position rotation)</procedure>
+Sets the position and rotation of the shape.
+
+<procedure>(reset-id-counter)</procedure>
+Chipmunk keeps a counter so that every new shape is given a unique hash value to be used in the spatial index. Because this affects the order in which the collisions are found and handled, you can reset the shape counter every time you populate a space with new shapes. If you don’t, there might be (very) slight differences in the simulation.
+
+==== Circles
+
+===== Creation
+
+<procedure>(create-circle body radius offset)</procedure>
+''body'' is the body to attach the circle to, ''offset'' is the offset from the body’s center of gravity in body local coordinates.
+
+===== Properties
+
+<procedure>(circle-offset cirlce-shape)</procedure>
+
+<procedure>(circle-radius cirlce-shape)</procedure>
+
+==== Segments
+
+===== Creation
+
+<procedure>(create-segment-shape body vect-a vect-b radius)</procedure>
+''body'' is the body to attach the segment to, ''vect-a'' and ''vect-b'' are the endpoints, and radius is the thickness of the segment.
+
+===== Properties
+
+<procedure>(segment-shape-a segment-shape)</procedure>
+
+<procedure>(segment-shape-b segment-shape)</procedure>
+
+<procedure>(segment-shape-normal segment-shape)</procedure>
+
+<procedure>(segment-shape-radius segment-shape)</procedure>
+
+==== Polygons
+
+===== Creation
+
+<procedure>(create-polygon-shape body vertices offset [radius])</procedure>
+''body'' is the body to attach the poly to, vertices is an list of vectors defining a convex hull with a clockwise winding, ''offset'' is the offset from the body’s center of gravity in body local coordinates. An assertion will be thrown the vertexes are not convex or do not have a clockwise winding.
+
+===== Properties
+
+<procedure>(polygon-shape-vertex-count polygon-shape)</procedure>
+
+<procedure>(polygon-shape-vertices polygon)</procedure>
+
+<procedure>(polygon-shape-radius)</procedure>
+
+===== Helper Functions
+
+<procedure>(valid-polygon? vertices)</procedure>
+Check if a vertex array is convex and with the correct winding.
+
+<procedure>(centroid-for-polygon vertices)</procedure>
+Calculate the centroid for a polygon.
+
+<procedure>(centroid-for-polygon vertices)</procedure>
+Center a polygon to (0,0). Subtracts the centroid from each vertex.
+
+===== Convex Hull Helper Functions
+
+'''TODO'''
+
+==== Boxes
+
+'''TODO'''
+
+=== Space
+
+==== Creation
+
+<procedure>(create-space)</procedure>
+
+==== Properties
+
+<procedure>(space-iterations space)</procedure>
+<setter>(set! (space-iterations space) value)</setter>
+Iterations allow you to control the accuracy of the solver. Defaults to 10.
+
+<procedure>(space-gravity space)</procedure>
+<setter>(set! (space-gravity space) value)</setter>
+Global gravity applied to the space. Defaults to ''(vect-zero)''. Can be overridden on a per body basis by writing custom integration functions.
+
+<procedure>(space-damping space)</procedure>
+<setter>(set! (space-damping space) value)</setter>
+Amount of simple damping to apply to the space. A value of 0.9 means that each body will lose 10% of it’s velocity per second. Defaults to 1. Like ''gravity'' can be overridden on a per body basis.
+
+<procedure>(space-idle-speed-treshold space)</procedure>
+<setter>(set! (space-idle-speed-treshold space) value)</setter>
+Speed threshold for a body to be considered idle. The default value of 0 means to let the space guess a good threshold based on gravity.
+
+<procedure>(space-sleep-time-treshold space)</procedure>
+<setter>(set! (space-sleep-time-treshold space) value)</setter>
+Time a group of bodies must remain idle in order to fall asleep. The default value of INFINITY disables the sleeping feature.
+
+<procedure>(space-collision-slop space)</procedure>
+<setter>(set! (space-collision-slop space) value)</setter>
+Amount of overlap between shapes that is allowed. It’s encouraged to set this as high as you can without noticable overlapping as it improves the stability. It defaults to 0.1.
+
+<procedure>(space-collision-bias space)</procedure>
+<setter>(set! (space-collision-bias space) value)</setter>
+Chipmunk allows fast moving objects to overlap, then fixes the overlap over time. Overlapping objects are unavoidable even if swept collisions are supported, and this is an efficient and stable way to deal with overlapping objects. The bias value controls what percentage of overlap remains unfixed after a second and defaults to ~0.2%. Valid values are in the range from 0 to 1, but using 0 is not recommended for stability reasons. The default value is calculated as ''(vect-pow((- 1.0 0.1) 60.0)'' meaning that Chipmunk attempts to correct 10% of error ever 1''60th of a second. '''Note<procedure> Very very few games will need to change this value.</procedure>
+
+<procedure>(space-collision-persistence space)</procedure>
+<setter>(set! (space-collision-persistence space) value)</setter>
+The number of frames the space keeps collision solutions around for. Helps prevent jittering contacts from getting worse. This defaults to 3 and very very '''very''' few games will need to change this value.
+
+<procedure>(space-current-time-step space)</procedure>
+Retrieves the current (if you are in a callback from ''(space-step)'') or most recent (outside of a ''(space-step)'' call) timestep.
+
+<procedure>(space-locked?)</procedure>
+Returns true when in a callback meaning that you cannot add''remove objects from the space. Can be used to choose to create a post-step callback instead.
+
+<procedure>(space-userdata space)</procedure>
+<setter>(set! (space-userdata space) value)</setter>
+This can be set to any value.
+
+<procedure>(space-static-body space)</procedure>
+A dedicated static body for the space. You don’t have to use it, but because it’s memory is managed automatically with the space it’s very convenient. You can set its user data pointer to something helpful if you want for callbacks.
+
+<procedure>(space-bodies space)</procedure>
+Returns a list of all bodies added to this space.
+
+<procedure>(space-shapes space)</procedure>
+Returns a list of all shapes added to this space.
+
+<procedure>(space-constraints space)</procedure>
+Returns a list of all constraints added to this space.
+
+==== Operations
+
+'''Note:''' It is not possible to add/remove something to/from a space inside callbacks other then ''post-step''.
+
+<procedure>(space-add-shape space shape)</procedure>
+<procedure>(space-add-static-shape space shape)</procedure>
+<procedure>(space-remove-shape space shape)</procedure>
+<procedure>(space-has-shape? space shape)</procedure>
+
+<procedure>(space-add-body space body)</procedure>
+<procedure>(space-remove-body space body)</procedure>
+<procedure>(space-has-body? space body)</procedure>
+
+<procedure>(space-add-constraint space constraint)</procedure>
+<procedure>(space-remove-constraint space constraint)</procedure>
+<procedure>(space-has-constraint? space constraint)</procedure>
+
+==== Iterators
+
+<procedure>(space-each-body space func)</procedure>
+This functions calls ''proc'' on every body inside this space.
+
+
+''proc'' should have the following form:
+<enscript highlight="scheme">
+(lambda (body) ...)
+</enscript>
+
+<procedure>(space-each-shape space func)</procedure>
+This functions calls ''proc'' on every shape inside this space.
+
+
+''proc'' should have the following form:
+<enscript highlight="scheme">
+(lambda (shape) ...)
+</enscript>
+
+<procedure>(space-each-constraint space func)</procedure>
+This functions calls ''proc'' on every constraint inside this space.
+
+
+''proc'' should have the following form:
+<enscript highlight="scheme">
+(lambda (constraint) ...)
+</enscript>
+
+==== Simulating the Space
+
+<procedure>(space-step space)</procedure>
+Update the space for the given time step. Using a fixed time step is '''highly''' recommended. 
+
+==== Enabling and Tuning the Spatial Hash
+
+If you have thousands of objects that are all approximately the same size, the spatial hash may be for you.
+
+<procedure>(space-use-spatital-hash space dim count)</procedure>
+Switch the space to use a spatial hash instead of the bounding box tree.
+
+==== Collision Handlers
+
+<procedure>(space-on-collision-begin space)</procedure>
+<setter>(set! (space-on-collision-begin space) func)</setter>
+
+Two shapes just started touching for the first time this step. Return true from the callback to process the collision normally or false to cause Chipmunk to ignore the collision entirely. If you return false, the /presolve/ and /postsolve/ callbacks will never be run, but you will still recieve a separate event when the shapes stop overlapping.
+
+
+''func'' must have the form:
+<enscript highlight="scheme">
+(lambda (arbiter space data) ...) -> boolean
+</enscript>
+
+Return '''#t''' from the callback to process the collision normally or '''#f''' to cause Chipmunk to ignore the collision entirely. If you return '''#f''', the ''(presolve)'' and ''(postSolve)'' callbacks will never be run, but you will still recieve a separate event when the shapes stop overlapping.
+
+<procedure>(space-on-collision-presolve space)</procedure>
+<setter>(set! (space-on-collision-presolve space) func)</setter>
+
+Two shapes are touching during this step. Return '''#f''' from the callback to make Chipmunk ignore the collision this step or '''#t''' to process it normally. Additionally, you may override collision values using /(set! arbiter-fricion ...)/ /(set! arbiter-elasticity ...)/ or /(set! arbiter-surface-velocity ...)/ to provide custom friction, elasticity, or surface velocity values.
+
+''func'' must have the form:
+<enscript highlight="scheme">
+(lambda (arbiter space data) ...)
+</enscript>
+
+<procedure>(space-on-collision-postsolve space)</procedure>
+<setter>(set! (space-on-collision-postsolve space) func)</setter>
+
+Two shapes are touching and their collision response has been processed. You can retrieve the collision impulse or kinetic energy at this time if you want to use it to calculate sound volumes or damage amounts.
+
+
+''func'' must have the form:
+<enscript highlight="scheme">
+(lambda (arbiter space data) ...)
+</enscript>
+
+<procedure>(space-on-collision-seperate space)</procedure>
+<setter>(set! (space-on-collision-seperate space) func)</setter>
+
+Two shapes have just stopped touching for the first time this step. To ensure that ''(begin)'' and ''(separate)'' are always called in balanced pairs, it will also be called when removing a shape while its in contact with something or when deallocating the space.
+
+
+''func'' must have the form:
+<enscript highlight="scheme">
+(lambda (arbiter space data) ...) -> boolean
+</enscript>
+
+<procedure>(space-add-collision-handler space type-a type-b begin presolve postsolve seperate [data])</procedure>
+Adds callback functions for collision types ''type-a'' and ''type-b'' see previous sections for the forms of the callback functions.
+
+<procedure>(space-remove-collision-handler space type-a type-b)</procedure>
+Remove a collision handler for a given collision type pair.
+
+<procedure>(space-add-poststep-callback space func key [data])</procedure>
+Register a default collision handler to be used when no specific collision handler is found. The space is given a default handler when created that returns '''#t''' for all collisions in ''(begin)'' and ''(presolve)'' and does nothing in the ''(postsolve)'' and ''(separate)'' callbacks.
+
+=== Constraints
+
+==== Properties
+
+<procedure>(constraint-a constraint)</procedure>
+<procedure>(constraint-b constraint)</procedure>
+Getters for the two bodies the constraint is attached to.
+
+<procedure>(constraint-max-force constraint)</procedure>
+<setter>(set! (constraint-max-force constraint) value)</setter>
+The maximum force that the constraint can use to act on the two bodies. Defaults to ''infinity''.
+
+<procedure>(constraint-error-bias constraint)</procedure>
+<setter>(set! (constraint-error-bias constraint) value)</setter>
+The percentage of joint error that remains unfixed after a second. This works exactly the same as the collision bias property of a space, but applies to fixing error (stretching) of joints instead of overlapping collisions.
+
+<procedure>(constraint-max-bias constraint)</procedure>
+<setter>(set! (constraint-max-bias constraint) value)</setter>
+The maximum speed at which the constraint can apply error correction. Defaults to ''infinity''.
+
+<procedure>(constraint-space constraint)</procedure>
+Get the ''space'' that constraint has been added to.
+
+<procedure>(constraint-impulse constraint)</procedure>
+The most recent impulse that constraint applied. To convert this to a force, divide by the timestep passed to ''(space-step)''. You can use this to implement breakable joints to check if the force they attempted to apply exceeded a certain threshold.
+
+<procedure>(space-userdata space)</procedure>
+<setter>(set! (space-userdata space) value)</setter>
+This can be set to any value.
+
+<procedure>(constraint-userdata constraint)</procedure>
+<setter>(set! (constraint-userdata constraint) value)</setter>
+This can be set to any value.
+
+==== Pin Joints
+
+===== Creation
+
+<procedure>(create-pin-joint body-a body-b anchor-a anchor-b)<procedure>
+''a'' and ''b'' are the two bodies to connect, and ''anchor-a'' and ''anchor-b'' are the anchor points on those bodies. The distance between the two anchor points is measured when the joint is created. If you want to set a specific distance, use the setter function to override it
+
+===== Properties
+
+<procedure>(constraint-anchor-a constraint)</procedure>
+<setter>(set! (constraint-anchor-a constraint) value)</setter>
+
+<procedure>(constraint-anchor-b constraint)</procedure>
+<setter>(set! (constraint-anchor-b constraint) value)</setter>
+
+<procedure>(constraint-distance constraint)</procedure>
+<setter>(set! (constraint-distance constraint) value)</setter>
+
+
+==== Slide Joints
+
+===== Creation
+
+<procedure>(create-slide-joint body-a body-b anchor-a anchor-b min max)</procedure>
+''a and ''b'' are the two bodies to connect, ''anchor-a'' and ''anchor-b'' are the anchor points on those bodies, and ''min'' and ''max'' define the allowed distances of the anchor points.
+
+===== Properties
+
+<procedure>(constraint-anchor-a constraint)</procedure>
+<setter>(set! (constraint-anchor-a constraint) value)</setter>
+
+<procedure>(constraint-anchor-b constraint)</procedure>
+<setter>(set! (constraint-anchor-b constraint) value)</setter>
+
+<procedure>(constraint-min constraint)</procedure>
+<setter>(set! (constraint-min constraint) value)</setter>
+
+<procedure>(constraint-max constraint)</procedure>
+<setter>(set! (constraint-max constraint) value)</setter>
+
+==== Pivot Joints
+
+===== Creation
+
+<procedure>(create-pivot-joint-with-pivot body-a body-b pivot)</procedure>
+<procedure>(create-pivot-joint-with-anchors body-a body-b anchor-a anchor-b)</procedure>
+''a'' and ''b'' are the two bodies to connect, and pivot is the point in world coordinates of the pivot. Because the pivot location is given in world coordinates, you must have the bodies moved into the correct positions already. Alternatively you can specify the joint based on a pair of anchor points, but make sure you have the bodies in the right place as the joint will fix itself as soon as you start simulating the space.
+
+===== Properties
+
+<procedure>(constraint-anchor-a constraint)</procedure>
+<setter>(set! (constraint-anchor-a constraint) value)</setter>
+
+<procedure>(constraint-anchor-b constraint)</procedure>
+<setter>(set! (constraint-anchor-b constraint) value)</setter>
+
+==== Groove Joints
+
+===== Creation
+
+<procedure>(create-groove-joint body-a body-b groove-a groove-b anchor-b)</procedure>
+The groove goes from 'groove-a'' to ''groove-b'' on ''body-a'', and the pivot is attached to ''anchor-b'' on ''body-b''. All coordinates are body local.
+
+===== Properties
+
+<procedure>(constraint-anchor constraint)</procedure>
+<setter>(set! (constraint-anchor constraint) value)</setter>
+
+<procedure>(constraint-groove-a constraint)</procedure>
+<setter>(set! (constraint-groove-a constraint) value)</setter>
+
+<procedure>(constraint-groove-b constraint)</procedure>
+<setter>(set! (constraint-groove-b constraint) value)</setter>
+
+==== Damped Spring
+
+===== Creation
+
+<procedure>(create-damped-spring body-a body-b anchor-a anchor-b rest-length stiffness damping)</procedure>
+Defined much like a slide joint. ''rest-length'' is the distance the spring wants to be, ''stiffness'' is the spring constant (Young’s modulus), and ''damping'' is how soft to make the damping of the spring.
+
+===== Properties
+
+<procedure>(constraint-anchor-a constraint)</procedure>
+<setter>(set! (constraint-anchor-a constraint) value)</setter>
+
+<procedure>(constraint-anchor-b constraint)</procedure>
+<setter>(set! (constraint-anchor-b constraint) value)</setter>
+
+<procedure>(constraint-rest-length constraint)</procedure>
+<setter>(set! (constraint-rest-length constraint) value)</setter>
+
+<procedure>(constraint-stiffness constraint)</procedure>
+<setter>(set! (constraint-stiffness constraint) value)</setter>
+
+<procedure>(constraint-damping constraint)</procedure>
+<setter>(set! (constraint-damping constraint) value)</setter>
+
+==== Damped Rotary Spring
+
+===== Creation
+
+<procedure>(create-damped-rotary-spring  body-a body-b anchor-a anchor-b rest-angle stiffness damping)</procedure>
+Like a damped spring, but works in an angular fashion. ''rest-angle'' is the relative angle in radians that the bodies want to have, ''stiffness'' and ''damping'' work basically the same as on a damped spring.
+
+===== Properties
+
+<procedure>(constraint-length constraint)</procedure>
+<setter>(set! (constraint-length constraint) value)</setter>
+
+<procedure>(constraint-stiffness constraint)</procedure>
+<setter>(set! (constraint-stiffness constraint) value)</setter>
+
+<procedure>(constraint-damping constraint)</procedure>
+<setter>(set! (constraint-damping constraint) value)</setter>
+
+==== Rotary Limit Joint
+
+===== Creation
+
+<procedure>(create-rotary-limit-joint body-a body-b min max)</procedure>
+Constrains the relative rotations of two bodies. ''min'' and ''max'' are the angular limits in radians. It is implemented so that it’s possible to for the range to be greater than a full revolution.
+
+===== Properties
+
+<procedure>(constraint-min constraint)</procedure>
+<setter>(set! (constraint-min constraint) value)</setter>
+
+<procedure>(constraint-max constraint)</procedure>
+<setter>(set! (constraint-max constraint) value)</setter>
+
+==== Ratchet Joint
+
+===== Creation
+
+<procedure>(create-ratchet-joint body-a body-b ratchet phase)</procedure>
+Works like a socket wrench. ''ratchet'' is the distance between “clicks”, ''phase'' is the initial offset to use when deciding where the ratchet angles are.
+
+===== Properties
+
+<procedure>(constraint-angle constraint)</procedure>
+<setter>(set! (constraint-angle constraint) value)</setter>
+
+<procedure>(constraint-phase constraint)</procedure>
+<setter>(set! (constraint-phase constraint) value)</setter>
+
+<procedure>(constraint-ratchet constraint)</procedure>
+<setter>(set! (constraint-ratchet constraint) value)</setter>
+
+==== Gear Joint
+
+===== Creation
+
+<procedure>(create-gear-joint body-a body-b phase ratio)</procedure>
+Keeps the angular velocity ratio of a pair of bodies constant. 'ratio' is always measured in absolute terms. It is currently not possible to set the ratio in relation to a third body’s angular velocity. 'phase' is the initial angular offset of the two bodies.
+
+===== Properties
+
+<procedure>(constraint-phase constraint)</procedure>
+<setter>(set! (constraint-phase constraint) value)</setter>
+
+<procedure>(constraint-ratio constraint)</procedure>
+<setter>(set! (constraint-ratio constraint) value)</setter>
+
+==== Simple Motor
+
+===== Creation
+
+<procedure>(create-simple-motor body-a body-b rate)</procedure>
+Keeps the relative angular velocity of a pair of bodies constant. ''rate'' is the desired relative angular velocity. You will usually want to set an force (torque) maximum for motors as otherwise they will be able to apply a nearly infinite torque to keep the bodies moving.
+
+===== Properties
+
+<procedure>(constraint-rate constraint)</procedure>
+<setter>(set! (constraint-rate constraint) value)</setter>
+
+=== Queries
+'''TODO''' Documentation
+'''TODO''' Make something nice for passing layers
+
+<procedure>(space-nearest-point-query space point max-distance layers group [data])</procedure>
+
+<procedure>(space-segment-query space start end layers group [data])</procedure>
+
+<procedure>(space-bb-query space bb layers group func data)</procedure>
+'''TODO''' Make data optional
+
+<procedure>(space-shape-query space shape func [data])</procedure>
