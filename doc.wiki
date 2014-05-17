@@ -402,9 +402,9 @@ You can assign types to Chipmunk collision shapes that trigger callbacks when ob
 '''TODO'''
 
 <procedure>(shape-layers shape)</procedure>
-<setter>(set! (shape-layers shape) value)</setter>
-<procedure>High-level interface</procedure>
-'''TODO'''
+<setter>(set! (shape-layers shape) layers)</setter>
+Assign or get the list of layers a shape belongs to.
+Shapes only collide with each other if they both belong to the same layer. Shapes can belong to 32 different layers (numbered 0...31).
 
 <procedure>(shape-space shape)</procedure>
 Get the ''space'' that ''shape'' has been added to.

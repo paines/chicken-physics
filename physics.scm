@@ -517,8 +517,8 @@ THE SOFTWARE.
   (getter-with-setter
    (lambda (shape)
      (%layers->list (low:shape-layers shape)))
-   (lambda (shape #!rest value)
-     (set! (low:shape-layers shape) (%list->layers value)))))
+   (lambda (shape layers)
+     (set! (low:shape-layers shape) (%list->layers layers)))))
 
 ; Polygon shapes
 
