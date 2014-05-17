@@ -8,6 +8,10 @@ A high-level wrapper for Chipmunk2D.
 * About
 This is a 2D physics library using Chipmunk2D.
 
+
+* Dependencies
+[[https://github.com/pluizer/chicken-chipmunk][chipmunk]]
+
 * Installation
 Simply clone this repository and run =chicken-install= inside the project's root directory.
 
