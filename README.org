@@ -10,7 +10,7 @@ This is a 2D physics library using Chipmunk2D.
 
 
 * Dependencies
-[[https://github.com/pluizer/chicken-chipmunk][chipmunk]]
+[[https://github.com/pluizer/chicken-chipmunk][chicken-chipmunk]]
 
 * Installation
 Simply clone this repository and run =chicken-install= inside the project's root directory.
@@ -22,3 +22,4 @@ See: [[https://wiki.call-cc.org/eggref/4/physics]]
 - Unit tests
 - Finish documentation for queries
 - Add examples
+
