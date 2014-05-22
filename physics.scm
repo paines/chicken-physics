@@ -577,14 +577,14 @@ THE SOFTWARE.
 ;-------------------------------------------------------
 
 (define %group-symbol-table
-  (make-hash-table eq?))
+  (make-hash-table))
 
 (define (%group->integer #!optional symbol)
   (if symbol
    (if (hash-table-exists? %group-symbol-table symbol)
        (hash-table-ref %group-symbol-table symbol)
        (let ((ix (hash-table-size %group-symbol-table)))
-         (hash-table-set! %group-symbol-table symbol ix)
+         (hash-table-set! %group-symbol-table ix symbol)
          ix))
    0))
 
