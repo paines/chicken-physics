@@ -316,10 +316,10 @@ Calculate the moment of inertia for a hollow circle, ''radius-a'' and ''radius-b
 <procedure>(moment-for-seqment mass vect-a vect-b)</procedure>
 Calculate the moment of inertia for a line segment. The endpoints ''vect-a'' and ''vect-b'' are relative to the body.
 
-<procedure>(moment-for-polygon vertices offset)</procedure>
+<procedure>(moment-for-polygon mass vertices offset)</procedure>
 Calculate the moment of inertia for a solid polygon shape assuming it’s center of gravity is at it’s centroid. The offset is added to each vertex.
 
-<procedure>(moment-for-box width height)</procedure>
+<procedure>(moment-for-box mass width height)</procedure>
 Calculate the moment of inertia for a solid box centered on the body.
 
 <procedure>(area-for-circle radius-a radius-b)</procedure>
