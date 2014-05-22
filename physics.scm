@@ -146,9 +146,9 @@ THE SOFTWARE.
   (let* ((tuple ((foreign-lambda scheme-object CHICKEN_gc_root_ref c-pointer) func-data))
         (func (car tuple))
         (data (cadr tuple))
-        (r (make-f64vector 2)))
+        (r (make-f32vector 2)))
     ; TODO: There must be a better way.
-    ((foreign-lambda* void ((c-pointer v) (f64vector r)) "
+    ((foreign-lambda* void ((c-pointer v) (f32vector r)) "
 	memcpy(r, v, sizeof(double)*2);") vect r)
     (apply func (append (list shape distance r data)))))
 
