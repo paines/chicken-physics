@@ -1,4 +1,4 @@
-A high-level and eady to use physics library for Chicken Scheme.
+A high-level and easy to use physics library for Chicken Scheme.
 
 - Version: 0.1
 - Author: Richard van Roy
